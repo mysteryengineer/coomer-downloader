@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="coomer" />
+    <working_directory value="$PROJECT_DIR$" />
+    <parameters value="-s onlyfans -u dyanny" />
+    <kind value="PACKAGE" />
+    <package value="coomer" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/main.go" />
+    <method v="2" />
+  </configuration>
+</component>
