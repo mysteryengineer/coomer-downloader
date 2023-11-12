@@ -17,7 +17,7 @@ FROM alpine:edge
 LABEL org.opencontainers.image.source="https://github.com/mysteryengineer/coomer-downloader"
 
 # Dependencies
-RUN apk add --no-cache libwebp-tools ffmpeg --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community
+RUN apk add --no-cache libavif-apps ffmpeg --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community
 
 # Define the image version
 ARG VERSION

@@ -10,7 +10,7 @@ Download all the pictures/videos posts from a particular user on Coomer. It also
 
 There are 2 ways to use this app: through the CLI tool or using Docker. Here are some points to consider to help you choose which solution is best for you:
 
-1. **CLI tool**: if you just intent to use __coomer-dl__ to download the files, but have no intention to automatically convert them to better/smaller formats (WebP/WebM), then stick with the CLI tool.
+1. **CLI tool**: if you just intend to use __coomer-dl__ to download the files, but have no intention to automatically convert them to better/smaller formats (AVIF/AV1), then stick with the CLI tool.
 
     - You can also use the CLI tool to convert files, however you must make sure that you have all the dependencies properly installed in your computer.
 
@@ -63,9 +63,9 @@ This application will automatically delete all files that are identical.
 
 ### Convert images/videos
 
-You can convert the media downloaded to better formats (WebP for images and WebM for videos); this will make the files smaller but preserving the same quality. To do that you should:
+You can convert the media downloaded to better formats (AVIF for images and AV1 for videos); this will make the files smaller but preserving the same quality. To do that you should:
 
-- **CLI tool:** add the parameters `--convert-images` and/or `--convert-videos`, depending on what you need. However, in order for the conversion to work, you must have the dependencies [libwebp](https://developers.google.com/speed/webp/download) and [FFmpeg](https://www.ffmpeg.org/download.html) installed in your computer.
+- **CLI tool:** add the parameters `--convert-images` and/or `--convert-videos`, depending on what you need. However, in order for the conversion to work, you must have the dependencies [libavif](https://github.com/AOMediaCodec/libavif) and [FFmpeg](https://www.ffmpeg.org/download.html) installed in your computer.
   
   You can check if the dependencies are properly installed and ready to be used with **coomer-dl** by running the command `coomer-dl check-deps`.
 

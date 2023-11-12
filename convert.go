@@ -21,7 +21,7 @@ func ConvertImages(downloads []Download) {
 	}).([]Download)
 
 	if len(filteredDownloads) > 0 {
-		pterm.Println("\n⚙️ Converting image to WebP...")
+		pterm.Println("\n⚙️ Converting images to AVIF...")
 	}
 
 	for _, image := range filteredDownloads {
@@ -31,13 +31,15 @@ func ConvertImages(downloads []Download) {
 			defer wg.Done()
 			sem <- struct{}{} // acquire a semaphore token
 
-			outputFile := replaceExtension(download.FilePath, ".webp")
+			outputFile := replaceExtension(download.FilePath, ".avif")
+			fileName := filepath.Base(download.FilePath)
 
-			pterm.Printf("["+pterm.Green("C")+"] Converting %s to WebP...\n", download.FilePath)
-			ConvertToWebP(download.FilePath, outputFile)
+			pterm.Printf("["+pterm.Green("C")+"] Converting %s to %s...\n", pterm.Bold.Sprintf(fileName),
+				pterm.Magenta("AVIF"))
+			ConvertToAvif(download.FilePath, outputFile)
 
 			// If the file was converted successfully, then we delete the original file
-			if fileExists(download.FilePath) {
+			if fileExists(outputFile) {
 				_ = fs.Remove(download.FilePath)
 			}
 
@@ -59,7 +61,7 @@ func ConvertVideos(downloads []Download) {
 	}).([]Download)
 
 	if len(filteredDownloads) > 0 {
-		pterm.Println("\n⚙️ Converting videos to WebM...")
+		pterm.Println("\n⚙️ Converting videos to AV1...")
 	}
 
 	for _, video := range filteredDownloads {
@@ -69,13 +71,15 @@ func ConvertVideos(downloads []Download) {
 			defer wg.Done()
 			sem <- struct{}{} // acquire a semaphore token
 
-			outputFile := replaceExtension(download.FilePath, ".webm")
+			outputFile := replaceExtension(download.FilePath, ".mkv")
+			fileName := filepath.Base(download.FilePath)
 
-			pterm.Printf("["+pterm.Green("C")+"] Converting %s to WebM...\n", download.FilePath)
-			ConvertToWebM(download.FilePath, outputFile)
+			pterm.Printf("["+pterm.Green("C")+"] Converting %s to %s...\n", pterm.Bold.Sprintf(fileName),
+				pterm.Yellow("AV1"))
+			ConvertToAv1(download.FilePath, outputFile)
 
 			// If the file was converted successfully, then we delete the original file
-			if fileExists(download.FilePath) {
+			if fileExists(outputFile) {
 				_ = fs.Remove(download.FilePath)
 			}
 
@@ -101,7 +105,7 @@ func RemoveDuplicates(downloads []Download) int {
 		deleteList := value[1:]
 
 		for _, deleteFile := range deleteList {
-			pterm.Printf("["+pterm.LightRed("D")+"] %s ...\n", deleteFile.FilePath)
+			pterm.Printf("["+pterm.LightRed("D")+"] %s...\n", pterm.Bold.Sprintf(deleteFile.FilePath))
 			numDeleted++
 			_ = fs.Remove(deleteFile.FilePath)
 		}
