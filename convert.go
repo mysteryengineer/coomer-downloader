@@ -39,7 +39,7 @@ func ConvertImages(downloads []Download) {
 			ConvertToAvif(download.FilePath, outputFile)
 
 			// If the file was converted successfully, then we delete the original file
-			if fileExists(outputFile) {
+			if fileExists(outputFile) && fileSize(outputFile) > 0 {
 				_ = fs.Remove(download.FilePath)
 			}
 
@@ -79,7 +79,7 @@ func ConvertVideos(downloads []Download) {
 			ConvertToAv1(download.FilePath, outputFile)
 
 			// If the file was converted successfully, then we delete the original file
-			if fileExists(outputFile) {
+			if fileExists(outputFile) && fileSize(outputFile) > 0 {
 				_ = fs.Remove(download.FilePath)
 			}
 
@@ -128,6 +128,22 @@ func fileExists(filePath string) bool {
 	}
 
 	return exists
+}
+
+func fileSize(filePath string) int64 {
+	file, err := fs.Open(filePath)
+	if err != nil {
+		return -1
+	}
+
+	defer file.Close()
+
+	fileInfo, err := file.Stat()
+	if err != nil {
+		return -1
+	}
+
+	return fileInfo.Size()
 }
 
 // endregion
