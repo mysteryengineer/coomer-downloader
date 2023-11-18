@@ -199,13 +199,7 @@ func startJob(
 
 	CreateReport(fullDir, downloads)
 
-	if convertImages {
-		ConvertImages(downloads)
-	}
-
-	if convertVideos {
-		ConvertVideos(downloads)
-	}
+	ConvertMedia(successes, convertImages, convertVideos)
 
 	pterm.Println("\n🌟 Done!")
 	return err

@@ -1,9 +1,13 @@
 package main
 
+import "path/filepath"
+
 type Media struct {
 	Url      string
 	FilePath string
 }
+
+// region - Download
 
 type Download struct {
 	Url       string
@@ -13,7 +17,17 @@ type Download struct {
 	Hash      string
 }
 
-// region - Sort
+func (d *Download) MediaType() MediaType {
+	extension := filepath.Ext(d.FilePath)
+
+	if extension == ".jpg" || extension == ".jpeg" || extension == ".png" {
+		return Image
+	} else if extension == ".gif" || extension == ".mp4" || extension == ".m4v" {
+		return Video
+	}
+
+	return Unknown
+}
 
 type ByFilePath []Download
 

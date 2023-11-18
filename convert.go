@@ -11,32 +11,50 @@ import (
 
 var fs = afero.NewOsFs()
 
-func ConvertImages(downloads []Download) {
+func ConvertMedia(downloads []Download, convertImages bool, convertVideos bool) {
 	var wg sync.WaitGroup // wait group to wait for all goroutines to complete
 	sem := make(chan struct{}, 5)
 
-	filteredDownloads := funk.Filter(downloads, func(download Download) bool {
-		extension := filepath.Ext(download.FilePath)
-		return extension == ".jpg" || extension == ".jpeg" || extension == ".png"
-	}).([]Download)
-
-	if len(filteredDownloads) > 0 {
-		pterm.Println("\n⚙️ Converting images to AVIF...")
+	if !convertImages {
+		downloads = funk.Filter(downloads, func(download Download) bool {
+			return download.MediaType() != Image
+		}).([]Download)
 	}
 
-	for _, image := range filteredDownloads {
+	if !convertVideos {
+		downloads = funk.Filter(downloads, func(download Download) bool {
+			return download.MediaType() != Video
+		}).([]Download)
+	}
+
+	if len(downloads) > 0 {
+		pterm.Println("\n⚙️ Converting media...")
+	}
+
+	for _, media := range downloads {
 		wg.Add(1)
 
 		go func(download Download) {
 			defer wg.Done()
 			sem <- struct{}{} // acquire a semaphore token
 
-			outputFile := replaceExtension(download.FilePath, ".avif")
-			fileName := filepath.Base(download.FilePath)
+			var outputFile string
+			if download.MediaType() == Image {
+				outputFile = replaceExtension(download.FilePath, ".avif")
+				fileName := filepath.Base(download.FilePath)
 
-			pterm.Printf("["+pterm.Green("C")+"] Converting %s to %s...\n", pterm.Bold.Sprintf(fileName),
-				pterm.Magenta("AVIF"))
-			ConvertToAvif(download.FilePath, outputFile)
+				pterm.Printf("["+pterm.Green("C")+"] Converting %s to %s...\n", pterm.Bold.Sprintf(fileName),
+					pterm.Magenta("AVIF"))
+				ConvertToAvif(download.FilePath, outputFile)
+
+			} else if download.MediaType() == Video {
+				outputFile = replaceExtension(download.FilePath, ".mkv")
+				fileName := filepath.Base(download.FilePath)
+
+				pterm.Printf("["+pterm.Green("C")+"] Converting %s to %s...\n", pterm.Bold.Sprintf(fileName),
+					pterm.Yellow("AV1"))
+				ConvertToAv1(download.FilePath, outputFile)
+			}
 
 			// If the file was converted successfully, then we delete the original file
 			if fileExists(outputFile) && fileSize(outputFile) > 0 {
@@ -44,47 +62,7 @@ func ConvertImages(downloads []Download) {
 			}
 
 			<-sem
-		}(image)
-	}
-
-	wg.Wait()
-	close(sem)
-}
-
-func ConvertVideos(downloads []Download) {
-	var wg sync.WaitGroup // wait group to wait for all goroutines to complete
-	sem := make(chan struct{}, 5)
-
-	filteredDownloads := funk.Filter(downloads, func(download Download) bool {
-		extension := filepath.Ext(download.FilePath)
-		return extension == ".gif" || extension == ".mp4" || extension == ".m4v"
-	}).([]Download)
-
-	if len(filteredDownloads) > 0 {
-		pterm.Println("\n⚙️ Converting videos to AV1...")
-	}
-
-	for _, video := range filteredDownloads {
-		wg.Add(1)
-
-		go func(download Download) {
-			defer wg.Done()
-			sem <- struct{}{} // acquire a semaphore token
-
-			outputFile := replaceExtension(download.FilePath, ".mkv")
-			fileName := filepath.Base(download.FilePath)
-
-			pterm.Printf("["+pterm.Green("C")+"] Converting %s to %s...\n", pterm.Bold.Sprintf(fileName),
-				pterm.Yellow("AV1"))
-			ConvertToAv1(download.FilePath, outputFile)
-
-			// If the file was converted successfully, then we delete the original file
-			if fileExists(outputFile) && fileSize(outputFile) > 0 {
-				_ = fs.Remove(download.FilePath)
-			}
-
-			<-sem
-		}(video)
+		}(media)
 	}
 
 	wg.Wait()
@@ -105,7 +83,8 @@ func RemoveDuplicates(downloads []Download) int {
 		deleteList := value[1:]
 
 		for _, deleteFile := range deleteList {
-			pterm.Printf("["+pterm.LightRed("D")+"] %s...\n", pterm.Bold.Sprintf(deleteFile.FilePath))
+			fileName := filepath.Base(deleteFile.FilePath)
+			pterm.Printf("["+pterm.LightRed("D")+"] Deleting %s...\n", pterm.Bold.Sprintf(fileName))
 			numDeleted++
 			_ = fs.Remove(deleteFile.FilePath)
 		}

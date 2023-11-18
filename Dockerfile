@@ -20,7 +20,6 @@ LABEL org.opencontainers.image.source="https://github.com/mysteryengineer/coomer
 RUN apk add --no-cache libavif-apps ffmpeg --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community
 
 # Define the image version
-ARG VERSION
 ENV IMAGE_VERSION=$VERSION
 
 COPY --from=BUILD_IMAGE /coomer/coomer-dl /usr/local/bin/
