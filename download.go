@@ -7,7 +7,6 @@ import (
 	"github.com/pterm/pterm"
 	"github.com/spf13/afero"
 	"net/http"
-	"sort"
 	"sync"
 	"time"
 )
@@ -45,7 +44,6 @@ func DownloadMedias(medias []Media, parallel int) []Download {
 	wg.Wait()
 	close(sem)
 
-	sort.Sort(ByFilePath(downloads))
 	return downloads
 }
 
