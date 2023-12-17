@@ -3,14 +3,14 @@ FROM --platform=$BUILDPLATFORM alpine:edge AS BUILD_IMAGE
 ARG TARGETARCH
 ARG VERSION
 
-# Installing UnZip
-RUN apk add --no-cache go --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community
+# Dependencies
+RUN apk add --no-cache wget --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community
 
 # Build project
 COPY . /coomer
 WORKDIR /coomer
-RUN sed -i "s/<version>/$VERSION/g" main.go
-RUN GOARCH=$TARGETARCH go build -o coomer-dl
+RUN wget https://github.com/mysteryengineer/coomer-downloader/releases/download/$VERSION/coomer-dl_linux_$TARGETARCH.zip
+RUN unzip coomer-dl_linux_$TARGETARCH.zip
 
 ### Main Image ###
 FROM alpine:edge
