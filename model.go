@@ -2,6 +2,10 @@ package main
 
 import "path/filepath"
 
+type Tag struct {
+	Name string `json:"name"`
+}
+
 type Media struct {
 	Url      string
 	FilePath string

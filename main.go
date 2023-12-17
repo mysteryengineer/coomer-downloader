@@ -175,6 +175,10 @@ func startJob(
 	convertImages bool,
 	convertVideos bool,
 ) error {
+	if IsOutdated(version, "mysteryengineer/coomer-downloader") {
+		pterm.Println(pterm.Yellow("\n✨ There's a new version of Coomer Downloader available for download!"))
+	}
+
 	name, err := CheckUser(service, user)
 	if err != nil {
 		return err
