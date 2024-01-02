@@ -7,6 +7,7 @@ import (
 	"github.com/urfave/cli/v2"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 func main() {
@@ -20,6 +21,7 @@ func main() {
 	var convertVideos bool
 
 	currentPath, _ := os.Getwd()
+	extensions := make([]string, 0)
 
 	app := &cli.App{
 		Name:            "coomer-dl",
@@ -89,6 +91,25 @@ func main() {
 					return nil
 				},
 			},
+			&cli.StringFlag{
+				Name:        "extensions",
+				Usage:       "filter the downloads to only certain file extensions, separated by comma",
+				Category:    "Optional:",
+				EnvVars:     []string{"COOMER_EXTENSIONS"},
+				DefaultText: "all extensions",
+				Action: func(context *cli.Context, s string) error {
+					split := strings.Split(s, ",")
+					split = funk.Map(split, func(ext string) string {
+						return "." + strings.ToLower(strings.TrimSpace(ext))
+					}).([]string)
+					split = funk.Filter(split, func(ext string) bool {
+						return len(ext) > 1
+					}).([]string)
+
+					extensions = append(extensions, split...)
+					return nil
+				},
+			},
 			&cli.BoolFlag{
 				Name:               "no-telemetry",
 				Value:              false,
@@ -138,6 +159,7 @@ func main() {
 				expandedDir,
 				parallel,
 				limit,
+				extensions,
 				noTelemetry,
 				convertImages,
 				convertVideos,
@@ -171,6 +193,7 @@ func startJob(
 	directory string,
 	parallel int,
 	limit int,
+	extensions []string,
 	noTelemetry bool,
 	convertImages bool,
 	convertVideos bool,
@@ -190,6 +213,11 @@ func startJob(
 
 	fullDir := filepath.Join(directory, name)
 	medias := GetMedias(service, user, fullDir, limit)
+	numMedias := len(medias)
+
+	if len(extensions) > 0 {
+		medias = FilterExtensions(medias, extensions)
+	}
 
 	downloads := DownloadMedias(medias, parallel)
 	successes := funk.Filter(downloads, func(download Download) bool { return download.IsSuccess }).([]Download)
@@ -198,7 +226,7 @@ func startJob(
 	duplicated, successes := RemoveDuplicates(successes)
 
 	if !noTelemetry {
-		TrackDownloadEnd(version, service, name, len(medias), len(failures), duplicated)
+		TrackDownloadEnd(version, service, name, numMedias, len(failures), duplicated)
 	}
 
 	CreateReport(fullDir, downloads)

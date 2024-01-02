@@ -1,6 +1,10 @@
 package main
 
-import "path/filepath"
+import (
+	"net/url"
+	"path/filepath"
+	"strings"
+)
 
 type Tag struct {
 	Name string `json:"name"`
@@ -9,6 +13,11 @@ type Tag struct {
 type Media struct {
 	Url      string
 	FilePath string
+}
+
+func (m *Media) Ext() string {
+	parsedUrl, _ := url.Parse(m.Url)
+	return strings.ToLower(filepath.Ext(parsedUrl.Path))
 }
 
 // region - Download

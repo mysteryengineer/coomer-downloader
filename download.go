@@ -18,6 +18,7 @@ func DownloadMedias(medias []Media, parallel int) []Download {
 
 	downloads := make([]Download, 0)
 
+	pterm.Println() // Intentional line break
 	pb, _ := pterm.DefaultProgressbar.
 		WithTotal(len(medias)).
 		Start("Downloading")

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/pterm/pterm"
+	"github.com/thoas/go-funk"
 	"math"
 	"path"
 	"path/filepath"
@@ -58,8 +59,20 @@ func GetMedias(service string, user string, directory string, limit int) []Media
 		}
 	}
 
-	pterm.Printf(" found %d posts/%d files\n\n", len(posts), len(medias))
+	pterm.Printf(" found %d posts/%d files\n", len(posts), len(medias))
 	return medias
+}
+
+func FilterExtensions(medias []Media, extensions []string) []Media {
+	ext := strings.Join(extensions, ", ")
+	pterm.Print("🔍 Filtering files with extension ", pterm.Bold.Sprintf(ext), " ... ")
+
+	filtered := funk.Filter(medias, func(media Media) bool {
+		return funk.ContainsString(extensions, media.Ext())
+	}).([]Media)
+
+	pterm.Printf("%d files remained\n", len(filtered))
+	return filtered
 }
 
 // region - Private functions

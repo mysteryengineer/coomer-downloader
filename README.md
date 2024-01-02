@@ -61,6 +61,14 @@ For example, if you want to download the media in the directory `/Downloads/Coom
 
 This application will automatically delete all files that are identical.
 
+### File filtering
+
+You can filter the files that you want to download based on their extension, separated by comma. To do that you must:
+
+- **CLI tool:** add the parameter `--extensions`; for example: `--extensions jpg,jpeg`.
+
+- **Docker:** add the environment variable `-e COOMER_EXTENSIONS`; for example: `-e COOMER_EXTENSIONS=jpg,jpeg`.
+
 ### Convert images/videos
 
 You can convert the media downloaded to better formats (AVIF for images and AV1 for videos); this will make the files smaller but preserving the same quality. To do that you must:
