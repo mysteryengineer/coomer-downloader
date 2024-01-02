@@ -12,7 +12,7 @@ There are 2 ways to use this app: through the CLI tool or using Docker. Here are
 
 1. **CLI tool**: if you just intend to use __coomer-dl__ to download the files, but have no intention to automatically convert them to better/smaller formats (AVIF/AV1), then stick with the CLI tool.
 
-    - You can also use the CLI tool to convert files, however you must make sure that you have all the dependencies properly installed in your computer.
+    - *Dependencies:* You can also use the CLI tool to [convert files](#convert-imagesvideos), however you must make sure that you have the dependencies [libavif](https://github.com/AOMediaCodec/libavif) and [FFmpeg](https://www.ffmpeg.org/download.html) before using the CLI tool. You can verify if all dependencies are properly installed by running the command `coomer-dl check-deps`.
 
 2. **Docker**: if you want __coomer-dl__ to not only download the files, but also convert them to better formats, then Docker is probably a better option since it comes with all required dependencies installed.
 
@@ -63,13 +63,11 @@ This application will automatically delete all files that are identical.
 
 ### Convert images/videos
 
-You can convert the media downloaded to better formats (AVIF for images and AV1 for videos); this will make the files smaller but preserving the same quality. To do that you should:
+You can convert the media downloaded to better formats (AVIF for images and AV1 for videos); this will make the files smaller but preserving the same quality. To do that you must:
 
-- **CLI tool:** add the parameters `--convert-images` and/or `--convert-videos`, depending on what you need. However, in order for the conversion to work, you must have the dependencies [libavif](https://github.com/AOMediaCodec/libavif) and [FFmpeg](https://www.ffmpeg.org/download.html) installed in your computer.
-  
-  You can check if the dependencies are properly installed and ready to be used with **coomer-dl** by running the command `coomer-dl check-deps`.
+- **CLI tool:** add the parameters `--convert-images` and/or `--convert-videos`, depending on what you need.
 
-- **Docker:** if you don't want to worry about installing dependencies, you can use **coomer-dl** with Docker and add the environment variables `-e COOMER_CONVERT_IMAGES=true` and/or `-e COOMER_CONVERT_VIDEOS=true` when you run the container.
+- **Docker:** add the environment variables `-e COOMER_CONVERT_IMAGES=true` and/or `-e COOMER_CONVERT_VIDEOS=true` when you run the container.
 
 ## 🛠️ Build
 
@@ -82,7 +80,7 @@ $ go build -o coomer-dl
 
 Docker:
 ```
-$ docker build -t mysteryengineer/coomer-downloader .
+$ docker build -t mysteryengineer/coomer-downloader . --build-arg="VERSION=23.12.17"
 ```
 
 ## 📈 Telemetry
