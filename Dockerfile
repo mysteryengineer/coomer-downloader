@@ -6,8 +6,8 @@ ARG VERSION
 # Dependencies
 RUN apk add --no-cache wget --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community
 
-# Build project
-COPY . /coomer
+# Download the binary
+RUN mkdir /coomer
 WORKDIR /coomer
 RUN wget https://github.com/mysteryengineer/coomer-downloader/releases/download/$VERSION/coomer-dl_linux_$TARGETARCH.zip
 RUN unzip coomer-dl_linux_$TARGETARCH.zip
