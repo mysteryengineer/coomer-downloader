@@ -3,12 +3,9 @@ package main
 import (
 	"crypto/sha256"
 	"fmt"
-	"github.com/go-resty/resty/v2"
 	"github.com/pterm/pterm"
 	"github.com/spf13/afero"
-	"net/http"
 	"sync"
-	"time"
 )
 
 func DownloadMedias(medias []Media, parallel int) []Download {
@@ -52,13 +49,6 @@ func DownloadMedias(medias []Media, parallel int) []Download {
 
 func downloadFile(url string, filePath string) error {
 	resp, err := client.
-		SetRetryCount(3).
-		SetRetryWaitTime(5 * time.Second).
-		AddRetryCondition(
-			func(r *resty.Response, err error) bool {
-				return err != nil || r.StatusCode() == http.StatusTooManyRequests
-			},
-		).
 		R().
 		SetOutput(filePath).
 		Get(url)

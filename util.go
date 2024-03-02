@@ -3,13 +3,23 @@ package main
 import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
+	"net/http"
 	"os"
 	"os/user"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
-var client = resty.New()
+var client = resty.New().
+	SetRetryCount(6).
+	SetRetryWaitTime(2 * time.Second).
+	SetRetryMaxWaitTime(60 * time.Second).
+	AddRetryCondition(
+		func(r *resty.Response, err error) bool {
+			return err != nil || r.StatusCode() == http.StatusTooManyRequests
+		},
+	)
 
 func IsOutdated(currentVersion string, repo string) bool {
 	var tags []Tag
