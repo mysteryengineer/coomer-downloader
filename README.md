@@ -1,3 +1,11 @@
+# ⚠️ Project Archived ⚠️ - use [UMD](https://github.com/vegidio/umd-app) instead!
+
+This project is no longer maintained. I decided to create a new project called [UMD](https://github.com/vegidio/umd-app) that does exactly the same things as **coomer-dl**, but it also supports more websites other than Coomer.
+
+Please use [UMD](https://github.com/vegidio/umd-app) from now on. This repository will be archived and no further updates will be made here.
+
+---
+
 # Coomer Downloader
 
 Download all the pictures/videos posts from a particular user on Coomer. It also removes duplicates and convert files to better formats, with higher image quality and smaller file sizes.
@@ -10,15 +18,15 @@ Download all the pictures/videos posts from a particular user on Coomer. It also
 
 There are 2 ways to use this app: through the CLI tool or using Docker. Here are some points to consider to help you choose which solution is best for you:
 
-1. **CLI tool**: if you just intend to use __coomer-dl__ to download the files, but have no intention to automatically convert them to better/smaller formats (AVIF/AV1), then stick with the CLI tool.
+1. **CLI tool**: if you just intend to use **coomer-dl** to download the files, but have no intention to automatically convert them to better/smaller formats (AVIF/AV1), then stick with the CLI tool.
 
-    - *Dependencies:* You can also use the CLI tool to [convert files](#convert-imagesvideos), however you must make sure that you have the dependencies [libavif](https://github.com/AOMediaCodec/libavif) and [FFmpeg](https://www.ffmpeg.org/download.html) before using the CLI tool. You can verify if all dependencies are properly installed by running the command `coomer-dl check-deps`.
+   - _Dependencies:_ You can also use the CLI tool to [convert files](#convert-imagesvideos), however you must make sure that you have the dependencies [libavif](https://github.com/AOMediaCodec/libavif) and [FFmpeg](https://www.ffmpeg.org/download.html) before using the CLI tool. You can verify if all dependencies are properly installed by running the command `coomer-dl check-deps`.
 
-2. **Docker**: if you want __coomer-dl__ to not only download the files, but also convert them to better formats, then Docker is probably a better option since it comes with all required dependencies installed.
+2. **Docker**: if you want **coomer-dl** to not only download the files, but also convert them to better formats, then Docker is probably a better option since it comes with all required dependencies installed.
 
 ### CLI Tool
 
-Download the [latest version](https://github.com/mysteryengineer/coomer-downloader/releases) of __coomer-dl__ that matches your computer architecture and operating system. Extract the .zip file somewhere and then run the command below in the terminal:
+Download the [latest version](https://github.com/mysteryengineer/coomer-downloader/releases) of **coomer-dl** that matches your computer architecture and operating system. Extract the .zip file somewhere and then run the command below in the terminal:
 
 ```
 $ coomer-dl -s onlyfans -u atomicbrunette18 -d /Downloads/Coomer
@@ -82,11 +90,13 @@ You can convert the media downloaded to better formats (AVIF for images and AV1 
 In the project's root folder run in the CLI:
 
 Go:
+
 ```
 $ go build -o coomer-dl
 ```
 
 Docker:
+
 ```
 $ docker build -t mysteryengineer/coomer-downloader . --build-arg="VERSION=23.12.17"
 ```
